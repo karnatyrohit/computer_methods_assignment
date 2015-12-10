@@ -15,38 +15,49 @@ C=array([(1, 1, 1, 1),(1, 1, -1j, d),(1, 1j, -1, -1j), \
 (1, c, 1j, 1)])
 
 def householder(a): 
+    print "A", a
     n = len(a)
     for k in range(n-2):
-        u = a[k+1:n,k]
+        u = (a[k+1:n,k]).copy()
         alpha = math.sqrt(dot(u,u))
         if u[0] < 0.0: alpha = -alpha
         u[0] = u[0] + alpha
         h = dot(u,u)/2.0
         p = dot(a[k+1:n,k+1:n],u)/h
         k1 = dot(u,p)/(2.0*h)
-        q = p - k1*u
+        q = p - dot(k1,u)
 	print u
 	print "as"
 	print q
 	print " "
-	print a , n , k
+	print a , n , k ,k1
         a[k+1:n,k+1:n] = a[k+1:n,k+1:n] - outer(q,u) - outer(u,q)
 	print "wer"
-        a[k,k+1] = alpha
+        a[k,k+1] = -alpha
     return np.diagonal(a),np.diagonal(a,1)
 
 def computeP(a): 
+    print "B", a
     n = len(a)
     p = np.identity(n)*1.0
     for k in range(n-2):
-        u = a[k+1:n,k]
+    	p = np.identity(n)
+        u = (a[k+1:n,k]).copy()
+        alpha = math.sqrt(dot(u,u))
+        if u[0] < 0.0: alpha = -alpha
+        u[0] = u[0] + alpha
         h = np.dot(u,u)/2.0
-        v = np.dot(p[1:n,k+1:n],u)/h           
-        p[1:n,k+1:n] = p[1:n,k+1:n] - np.outer(v,u)
+        v = u.transpose()           
+        p[k+1:n,k+1:n] = p[k+1:n,k+1:n] - np.outer(u,v)/h
+	print p
+	a= dot(dot(p,a),p)
+	print a
     return p
       
-k=householder(B)
-P=computeP(B)
+k=householder(B.copy())
+print "====="
+print k
+P=computeP(B.copy())
 print P
 print B*P
 print P*B
