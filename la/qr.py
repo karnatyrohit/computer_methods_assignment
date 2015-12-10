@@ -39,7 +39,7 @@ def householder(a):
 def computeP(a): 
     print "B", a
     n = len(a)
-    p = np.identity(n)*1.0
+    p = np.identity(n)
     for k in range(n-2):
     	p = np.identity(n)
         u = (a[k+1:n,k]).copy()
@@ -49,17 +49,47 @@ def computeP(a):
         h = np.dot(u,u)/2.0
         v = u.transpose()           
         p[k+1:n,k+1:n] = p[k+1:n,k+1:n] - np.outer(u,v)/h
+
 	print p
 	a= dot(dot(p,a),p)
 	print a
-    return p
+    return a
       
 k=householder(B.copy())
 print "====="
 print k
-P=computeP(B.copy())
-print P
-print B*P
-print P*B
-print P*B*P
+B=computeP(B.copy())
 # To demo git commit
+def qrStep(b):
+	n = len(b)
+	q=identity(n)
+	for k in range(n-1):
+		p = np.identity(n)  
+		u = (b[k:n,k]).copy() # getU(b, k)
+		alpha = math.sqrt(dot(u,u)) 
+		if u[0] < 0.0: alpha = -alpha
+		u[0] = u[0] + alpha
+		h = np.dot(u,u)/2.0
+		v = u.transpose()           
+		p[k:n,k:n] = p[k:n,k:n] - np.outer(u,v)/h # getP(u, k)
+		q=dot(q,p.transpose())
+		b = dot(p,b)
+	outcome=(2*trace(b,offset=1))/trace(b)
+	return (q,b,outcome)
+
+def qrDecomposition(b):
+	outcome = 1
+	q = None
+	r = None
+	i=0
+	while(abs(outcome) > 1e-10):
+		(q,r,outcome) = qrStep(b)
+		b=dot(r,q)
+		i=i+1
+		print i
+	print b
+	return (q,r)
+
+(Q,R) = qrDecomposition(B)
+print Q
+print R
