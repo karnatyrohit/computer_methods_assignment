@@ -50,16 +50,16 @@ def computeP(a):
         v = u.transpose()           
         p[k+1:n,k+1:n] = p[k+1:n,k+1:n] - np.outer(u,v)/h
 
-	print p
+	#print p
 	a= dot(dot(p,a),p)
-	print a
+	print around(a,decimals=6)
+	#print a
     return a
       
-k=householder(B.copy())
+k=householder(A.copy())
 print "====="
 print k
-B=computeP(B.copy())
-# To demo git commit
+B=computeP(A.copy())
 def qrStep(b):
 	n = len(b)
 	q=identity(n)
@@ -86,10 +86,15 @@ def qrDecomposition(b):
 		(q,r,outcome) = qrStep(b)
 		b=dot(r,q)
 		i=i+1
-		print i
+		#print i
 	print b
+	print around(b,decimals=6)
 	return (q,r)
 
+print "A", around(A,decimals=6)
+print "B", around(B,decimals=6)
 (Q,R) = qrDecomposition(B)
-print Q
-print R
+g=linalg.eig(B)
+print g[0]
+#print around(Q)
+#print around(R)
