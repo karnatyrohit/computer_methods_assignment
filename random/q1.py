@@ -34,14 +34,15 @@ def gauss1():
 	else:
 		iset = 0
 		return gauss2
+if "__main__" == __name__:
 
-x = []
-for i in range(20000):
-	x.append(gauss1())
+	x = []
+	for i in range(20000):
+		x.append(gauss1())
 
 #hist(x, bins=50)
-n,bins,patches=hist(x, 50, normed=1,facecolor='green',alpha=0.75,label='Histogram')
-y=mlab.normpdf(bins,0,1)
-plot(bins,y,'r--',linewidth=1,label='Standard Normal Distribution')
-print n ,"A" , bins, "B", patches 
-show()	
+	n,bins,patches=hist(x, 50, normed=1,facecolor='green',alpha=0.75,label='Histogram')
+	y=mlab.normpdf(bins,0,1)
+	plot(bins,y,'r--',linewidth=1,label='Standard Normal Distribution')
+	print n ,"A" , bins, "B", patches 
+	show()	
